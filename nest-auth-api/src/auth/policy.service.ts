@@ -11,6 +11,20 @@ export class PolicyService {
     if (p.ownerId !== userId) throw new ForbiddenException('Not the project owner');
   }
 
+  async assertProjectOwnerByNumber(projectNumber: number, userId: string) {
+    const p = await this.prisma.project.findUnique({ 
+      where: { 
+        ownerId_projectNumber: { 
+          ownerId: userId, 
+          projectNumber 
+        } 
+      }, 
+      select: { ownerId: true } 
+    });
+    if (!p) throw new ForbiddenException('Project not found');
+    // No need to check ownerId since it's part of the unique constraint
+  }
+
   async canModifyTask(taskId: string, userId: string) {
     // Owner of the project OR assignee can modify certain fields
     const t = await this.prisma.task.findUnique({

@@ -20,21 +20,33 @@ export class ProjectsController {
     return this.svc.create(req.user.sub, dto);
   }
 
-  @Get(':projectId')
-  async get(@Req() req: any, @Param('projectId') projectId: string) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
-    return this.svc.get(projectId);
+  @Get(':projectNumber')
+  async get(@Req() req: any, @Param('projectNumber') projectNumber: string) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
+    return this.svc.getByNumber(req.user.sub, projectNum);
   }
 
-  @Patch(':projectId')
-  async update(@Req() req: any, @Param('projectId') projectId: string, @Body() dto: UpdateProjectDto) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
-    return this.svc.update(projectId, dto);
+  @Patch(':projectNumber')
+  async update(@Req() req: any, @Param('projectNumber') projectNumber: string, @Body() dto: UpdateProjectDto) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
+    return this.svc.updateByNumber(req.user.sub, projectNum, dto);
   }
 
-  @Delete(':projectId')
-  async remove(@Req() req: any, @Param('projectId') projectId: string) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
-    return this.svc.remove(projectId);
+  @Delete(':projectNumber')
+  async remove(@Req() req: any, @Param('projectNumber') projectNumber: string) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
+    return this.svc.removeByNumber(req.user.sub, projectNum);
   }
 }

@@ -46,15 +46,17 @@ enum TaskStatus {
 }
 
 model Project {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  ownerId     String
-  owner       User     @relation("UserOwnedProjects", fields: [ownerId], references: [id], onDelete: Cascade)
-  tasks       Task[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  projectNumber Int
+  name          String
+  description   String?
+  ownerId       String
+  owner         User     @relation("UserOwnedProjects", fields: [ownerId], references: [id], onDelete: Cascade)
+  tasks         Task[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
+  @@unique([ownerId, projectNumber])
   @@index([ownerId])
 }
 
