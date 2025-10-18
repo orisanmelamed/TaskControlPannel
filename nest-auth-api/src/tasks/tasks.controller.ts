@@ -7,7 +7,7 @@ import { PolicyService } from '../auth/policy.service';
 import { ProjectsService } from '../projects/projects.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('projects/:projectId/tasks')
+@Controller('projects/:projectNumber/tasks')
 export class TasksController {
   constructor(
     private tasks: TasksService,
@@ -16,23 +16,50 @@ export class TasksController {
   ) {}
 
   @Get()
-  async list(@Req() req: any, @Param('projectId') projectId: string) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
-    return this.tasks.list(projectId);
+  async list(@Req() req: any, @Param('projectNumber') projectNumber: string) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
+    
+    // Get the actual project to get its UUID for the tasks query
+    const project = await this.projects.getByNumber(req.user.sub, projectNum);
+    if (!project) {
+      throw new (await import('@nestjs/common')).NotFoundException('Project not found');
+    }
+    
+    return this.tasks.list(project.id);
   }
 
   @Post()
-  async create(@Req() req: any, @Param('projectId') projectId: string, @Body() dto: CreateTaskDto) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
-    return this.tasks.create(projectId, dto);
+  async create(@Req() req: any, @Param('projectNumber') projectNumber: string, @Body() dto: CreateTaskDto) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
+    
+    // Get the actual project to get its UUID for the task creation
+    const project = await this.projects.getByNumber(req.user.sub, projectNum);
+    if (!project) {
+      throw new (await import('@nestjs/common')).NotFoundException('Project not found');
+    }
+    
+    return this.tasks.create(project.id, dto);
   }
 
   @Patch(':taskId')
-  async update(@Req() req: any, @Param('projectId') projectId: string, @Param('taskId') taskId: string, @Body() dto: UpdateTaskDto) {
+  async update(@Req() req: any, @Param('projectNumber') projectNumber: string, @Param('taskId') taskId: string, @Body() dto: UpdateTaskDto) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    
     // Owner can update all fields; assignee can update only status/position
     // Fast path: if owner, allow all
     try {
-      await this.policy.assertProjectOwner(projectId, req.user.sub);
+      await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
       return this.tasks.update(taskId, dto);
     } catch {
       // not owner: check if assignee and restrict fields
@@ -44,8 +71,12 @@ export class TasksController {
   }
 
   @Delete(':taskId')
-  async delete(@Req() req: any, @Param('projectId') projectId: string, @Param('taskId') taskId: string) {
-    await this.policy.assertProjectOwner(projectId, req.user.sub);
+  async delete(@Req() req: any, @Param('projectNumber') projectNumber: string, @Param('taskId') taskId: string) {
+    const projectNum = parseInt(projectNumber);
+    if (isNaN(projectNum)) {
+      throw new (await import('@nestjs/common')).BadRequestException('Invalid project number');
+    }
+    await this.policy.assertProjectOwnerByNumber(projectNum, req.user.sub);
     return this.tasks.remove(taskId);
   }
 }
