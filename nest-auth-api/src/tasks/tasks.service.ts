@@ -25,7 +25,7 @@ export class TasksService {
         projectId,
         title: data.title,
         description: data.description,
-        status: data.status ?? 'TODO',
+        status: data.status ?? 'todo',
         position: data.position ?? 0,
         dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
         assignedTo: data.assignedTo,
