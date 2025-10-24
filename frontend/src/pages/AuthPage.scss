@@ -1,0 +1,38 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.auth-page {
+    min-height: 100vh;
+
+    .auth-page-background {
+        min-height: 100vh;
+        background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+        @include flex-center;
+        padding: $spacer-lg;
+    }
+
+    .auth-page-content {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .auth-container {
+        background: white;
+        border-radius: $border-radius-lg;
+        box-shadow: $box-shadow-lg;
+        overflow: hidden;
+    }
+}
+
+// Responsive design
+@include respond-below($breakpoint-sm) {
+    .auth-page {
+        .auth-page-background {
+            padding: $spacer-md;
+        }
+
+        .auth-page-content {
+            max-width: 100%;
+        }
+    }
+}
