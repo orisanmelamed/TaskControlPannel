@@ -1,0 +1,78 @@
+@use 'variables' as *;
+
+// Mixins for responsive design
+@mixin respond-above($breakpoint) {
+    @media (min-width: $breakpoint) {
+        @content;
+    }
+}
+
+@mixin respond-below($breakpoint) {
+    @media (max-width: calc(#{$breakpoint} - 1px)) {
+        @content;
+    }
+}
+
+// Flexbox mixins
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+// Text mixins
+@mixin text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@mixin text-clamp($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// Button mixins
+@mixin button-variant($color, $background, $border) {
+    color: $color;
+    background-color: $background;
+    border-color: $border;
+
+    &:hover:not(:disabled) {
+        color: $color;
+        filter: brightness(0.9);
+    }
+
+    &:focus {
+        outline: 2px solid rgba(0, 123, 255, 0.5);
+        outline-offset: 2px;
+    }
+}
+
+// Card mixins
+@mixin card-shadow($level: 1) {
+    @if $level ==1 {
+        box-shadow: $box-shadow-sm;
+    }
+
+    @else if $level ==2 {
+        box-shadow: $box-shadow;
+    }
+
+    @else if $level ==3 {
+        box-shadow: $box-shadow-lg;
+    }
+}
