@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  fetchProjects,
+  selectProjects,
+  selectProjectsLoading,
+} from '../store/slices/projectsSlice';
 import Header from '../components/layout/Header';
 import './DashboardPage.scss';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const dispatch = useAppDispatch();
+  
+  // Redux state
+  const projects = useAppSelector(selectProjects);
+  const isLoadingProjects = useAppSelector(selectProjectsLoading);
+
+  useEffect(() => {
+    // Only fetch if we don't have projects yet
+    if (projects.length === 0) {
+      dispatch(fetchProjects());
+    }
+  }, [dispatch, projects.length]);
 
   return (
     <div className="dashboard-page">
@@ -25,15 +44,24 @@ const DashboardPage: React.FC = () => {
                 </div>
                 <div className="card-body">
                   <div className="metric">
-                    <span className="metric-number">0</span>
+                    <span className="metric-number">
+                      {isLoadingProjects ? '...' : projects.length}
+                    </span>
                     <span className="metric-label">Total Projects</span>
                   </div>
-                  <p className="card-text">
-                    No projects yet. Start by creating your first project to organize your tasks.
-                  </p>
-                  <button className="btn btn-primary">
+                  {projects.length === 0 ? (
+                    <p className="card-text">
+                      No projects yet. Start by creating your first project to organize your tasks.
+                    </p>
+                  ) : (
+                    <p className="card-text">
+                      You have {projects.length} project{projects.length !== 1 ? 's' : ''}. 
+                      Click below to manage them.
+                    </p>
+                  )}
+                  <Link to="/projects/new" className="btn btn-primary">
                     Create Project
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -72,12 +100,12 @@ const DashboardPage: React.FC = () => {
                 </div>
                 <div className="card-body">
                   <div className="quick-actions">
-                    <button className="btn btn-primary btn-block">
+                    <Link to="/projects/new" className="btn btn-primary btn-block">
                       Create New Project
-                    </button>
-                    <button className="btn btn-secondary btn-block">
+                    </Link>
+                    <Link to="/projects" className="btn btn-secondary btn-block">
                       View All Projects
-                    </button>
+                    </Link>
                     <button className="btn btn-secondary btn-block">
                       View All Tasks
                     </button>
