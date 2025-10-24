@@ -1,0 +1,401 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.projects-page {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+
+    .projects-main {
+        padding: 2rem 0;
+
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+
+            .projects-title {
+                h2 {
+                    color: #007bff;
+                    font-size: 2.5rem;
+                    margin-bottom: 0.5rem;
+                }
+
+                p {
+                    color: #6c757d;
+                    font-size: 1.1rem;
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .projects-controls {
+            margin-bottom: 2rem;
+
+            .search-section {
+                max-width: 400px;
+
+                .search-input {
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    border: 1px solid #dee2e6;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    background-color: white;
+                    transition: border-color 0.2s ease;
+
+                    &:focus {
+                        outline: none;
+                        border-color: #007bff;
+                        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+                    }
+
+                    &::placeholder {
+                        color: #6c757d;
+                    }
+                }
+            }
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            gap: 1rem;
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid #dee2e6;
+                border-top: 4px solid #007bff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            p {
+                color: #6c757d;
+                margin: 0;
+            }
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid #f5c6cb;
+
+            p {
+                margin-bottom: 0.75rem;
+            }
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+
+            .empty-content {
+                text-align: center;
+                max-width: 400px;
+
+                h3 {
+                    color: #007bff;
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                }
+
+                p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                    line-height: 1.6;
+                }
+            }
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+
+            .project-card {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                }
+
+                .project-header {
+                    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+                    color: white;
+                    padding: 1.5rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+
+                    .project-info {
+                        flex: 1;
+
+                        .project-name {
+                            margin: 0 0 0.5rem 0;
+                            font-size: 1.25rem;
+                            font-weight: 600;
+
+                            a {
+                                color: white;
+                                text-decoration: none;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+
+                        .project-number {
+                            background: rgba(255, 255, 255, 0.2);
+                            color: white;
+                            padding: 0.25rem 0.5rem;
+                            border-radius: 20px;
+                            font-size: 0.875rem;
+                            font-weight: 500;
+                        }
+                    }
+
+                    .project-actions {
+                        display: flex;
+                        gap: 0.5rem;
+
+                        .btn-icon {
+                            background: rgba(255, 255, 255, 0.1);
+                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            color: white;
+                            width: 36px;
+                            height: 36px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: background-color 0.2s ease;
+
+                            &:hover {
+                                background: rgba(255, 255, 255, 0.2);
+                            }
+
+                            &.btn-danger:hover {
+                                background: rgba(220, 53, 69, 0.8);
+                            }
+                        }
+                    }
+                }
+
+                .project-body {
+                    padding: 1.5rem;
+
+                    .project-description {
+                        color: #495057;
+                        line-height: 1.6;
+                        margin: 0;
+
+                        &.no-description {
+                            color: #6c757d;
+                            font-style: italic;
+                        }
+                    }
+                }
+
+                .project-footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 1.5rem;
+                    border-top: 1px solid #dee2e6;
+                    background-color: #f8f9fa;
+
+                    .project-date {
+                        color: #6c757d;
+                        font-size: 0.85rem;
+                    }
+
+                    .btn-sm {
+                        font-size: 0.85rem;
+                        padding: 0.5rem 0.75rem;
+                    }
+                }
+
+                .delete-modal {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10;
+
+                    .delete-content {
+                        background: white;
+                        padding: 2rem;
+                        border-radius: 4px;
+                        text-align: center;
+                        max-width: 300px;
+                        margin: 1rem;
+
+                        h4 {
+                            color: #dc3545;
+                            margin-bottom: 1rem;
+                        }
+
+                        p {
+                            color: #495057;
+                            margin-bottom: 1.5rem;
+                        }
+
+                        .delete-actions {
+                            display: flex;
+                            gap: 0.75rem;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s ease;
+
+    &.btn-primary {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+
+        &:hover {
+            background: #0056b3;
+            border-color: #004085;
+        }
+    }
+
+    &.btn-secondary {
+        background: #6c757d;
+        color: white;
+        border-color: #6c757d;
+
+        &:hover {
+            background: #545b62;
+            border-color: #4e555b;
+        }
+    }
+
+    &.btn-danger {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+
+        &:hover {
+            background: #c82333;
+            border-color: #bd2130;
+        }
+    }
+
+    &.btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .projects-page {
+        .projects-main {
+            .projects-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+
+                .projects-title {
+                    text-align: center;
+
+                    h2 {
+                        font-size: 1.75rem;
+                    }
+
+                    p {
+                        font-size: 1rem;
+                    }
+                }
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+
+                .project-card {
+                    .project-header {
+                        padding: 1rem;
+
+                        .project-info {
+                            .project-name {
+                                font-size: 1.1rem;
+                            }
+                        }
+
+                        .project-actions {
+                            .btn-icon {
+                                width: 32px;
+                                height: 32px;
+                                font-size: 0.9rem;
+                            }
+                        }
+                    }
+
+                    .project-body {
+                        padding: 1rem;
+                    }
+
+                    .project-footer {
+                        padding: 0.75rem 1rem;
+                        flex-direction: column;
+                        gap: 0.5rem;
+                        align-items: stretch;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}

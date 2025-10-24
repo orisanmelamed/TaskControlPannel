@@ -1,9 +1,11 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Header.scss';
 
 const Header: React.FC = () => {
   const { user, logout, isLoading } = useAuth();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -13,18 +15,43 @@ const Header: React.FC = () => {
     }
   };
 
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
   return (
     <header className="app-header">
       <div className="container">
         <div className="header-content">
           <div className="header-brand">
-            <h1>Task Control Panel</h1>
+            <Link to="/dashboard" className="brand-link">
+              <h1>Task Control Panel</h1>
+            </Link>
           </div>
           
           <nav className="header-nav">
+            <ul className="nav-links">
+              <li>
+                <Link 
+                  to="/dashboard" 
+                  className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/projects" 
+                  className={`nav-link ${isActive('/projects') ? 'active' : ''}`}
+                >
+                  Projects
+                </Link>
+              </li>
+            </ul>
+            
             <div className="user-menu">
               <span className="user-info">
-                Welcome, {user?.name || user?.email || 'User'}
+                {user?.name || user?.email || 'User'}
               </span>
               <button
                 onClick={handleLogout}

@@ -13,6 +13,16 @@
     }
 
     .header-brand {
+        .brand-link {
+            text-decoration: none;
+            color: white;
+            transition: opacity 0.2s ease;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+
         h1 {
             font-size: 1.5rem;
             margin: 0;
@@ -21,6 +31,42 @@
     }
 
     .header-nav {
+        display: flex;
+        align-items: center;
+        gap: $spacer-xl;
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: $spacer-md;
+
+            li {
+                margin: 0;
+            }
+
+            .nav-link {
+                color: rgba(white, 0.9);
+                text-decoration: none;
+                padding: $spacer-xs $spacer-md;
+                border-radius: $border-radius-sm;
+                font-weight: $font-weight-semibold;
+                transition: all 0.2s ease;
+                display: block;
+
+                &:hover {
+                    background-color: rgba(white, 0.1);
+                    color: white;
+                }
+
+                &.active {
+                    background-color: rgba(white, 0.2);
+                    color: white;
+                }
+            }
+        }
+
         .user-menu {
             @include flex-center;
             gap: $spacer-md;
@@ -51,6 +97,31 @@
 }
 
 // Responsive design
+@include respond-below($breakpoint-md) {
+    .app-header {
+        .header-content {
+            flex-direction: column;
+            gap: $spacer-md;
+        }
+
+        .header-nav {
+            width: 100%;
+            flex-direction: column;
+            gap: $spacer-md;
+
+            .nav-links {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+}
+
 @include respond-below($breakpoint-sm) {
     .app-header {
         padding: $spacer-sm 0;
@@ -68,6 +139,19 @@
         }
 
         .header-nav {
+            gap: $spacer-sm;
+
+            .nav-links {
+                flex-direction: column;
+                gap: $spacer-xs;
+                width: 100%;
+
+                .nav-link {
+                    padding: $spacer-sm;
+                    text-align: center;
+                }
+            }
+
             .user-menu {
                 flex-direction: column;
                 gap: $spacer-xs;
@@ -79,6 +163,7 @@
                 .logout-btn {
                     font-size: 0.8rem;
                     padding: $spacer-xs $spacer-sm;
+                    width: 100%;
                 }
             }
         }
