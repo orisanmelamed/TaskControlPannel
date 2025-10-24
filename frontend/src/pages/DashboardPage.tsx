@@ -82,7 +82,7 @@ const DashboardPage: React.FC = () => {
                   </p>
                   <button className="btn btn-primary" onClick={handleCreateProject}>
                     Create Project
-                  </button>
+                  </Link>
                 </div>
               </div>
 

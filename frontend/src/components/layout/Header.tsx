@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Header.scss';
 
 const Header: React.FC = () => {
   const { user, logout, isLoading } = useAuth();
+  const location = useLocation();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -24,6 +26,9 @@ const Header: React.FC = () => {
       <div className="container">
         <div className="header-content">
           <div className="header-brand">
+            <Link to="/dashboard" className="brand-link">
+              <h1>Task Control Panel</h1>
+            </Link>
             <Link to="/dashboard" className="brand-link">
               <h1>Task Control Panel</h1>
             </Link>

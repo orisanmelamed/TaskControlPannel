@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ReduxProvider } from './providers/ReduxProvider';
+import { ReduxProvider } from './providers/ReduxProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import AuthPage from './pages/AuthPage';
