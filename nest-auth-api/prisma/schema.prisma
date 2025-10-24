@@ -62,6 +62,7 @@ model Project {
 
 model Task {
   id          String     @id @default(uuid())
+  taskNumber  Int
   title       String
   description String?
   status      TaskStatus @default(TODO)
@@ -74,6 +75,7 @@ model Task {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
+  @@unique([projectId, taskNumber])
   @@index([projectId])
   @@index([assignedTo])
 }
