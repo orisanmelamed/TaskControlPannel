@@ -80,8 +80,20 @@ export class AuthService {
   private async saveRefresh(userId: string, token: string) {
     const decoded = await this.verifyRefresh(token);
     const expMs = (decoded.exp as number) * 1000;
-    await this.prisma.refreshToken.create({
-      data: { userId, token, expiresAt: new Date(expMs) },
+    
+    // Use upsert to handle potential duplicates gracefully
+    await this.prisma.refreshToken.upsert({
+      where: { token },
+      update: {
+        userId,
+        expiresAt: new Date(expMs),
+        isRevoked: false,
+      },
+      create: {
+        userId,
+        token,
+        expiresAt: new Date(expMs),
+      },
     });
   }
 }

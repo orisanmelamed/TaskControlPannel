@@ -55,3 +55,16 @@ export const getRelativeTime = (dateString: string): string => {
       : `${hours} hour${hours > 1 ? 's' : ''} ago`;
   }
 };
+
+/**
+ * Format date for input fields (YYYY-MM-DD)
+ */
+export const formatDateForInput = (date: string | Date): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(dateObj.getTime())) {
+    return '';
+  }
+
+  return dateObj.toISOString().split('T')[0];
+};

@@ -183,10 +183,10 @@ const ProjectsPage: React.FC = () => {
                       Created {formatDate(project.createdAt)}
                     </span>
                     <Link 
-                      to={`/projects/${project.projectNumber}/tasks`}
+                      to={`/projects/${project.projectNumber}`}
                       className="btn btn-secondary btn-sm"
                     >
-                      View Tasks
+                      View Details
                     </Link>
                   </div>
 

@@ -14,11 +14,12 @@
 
     .header-brand {
         .brand-link {
-            color: white;
             text-decoration: none;
+            color: white;
+            transition: opacity 0.2s ease;
 
             &:hover {
-                color: rgba(white, 0.9);
+                opacity: 0.9;
             }
         }
 
@@ -30,39 +31,39 @@
     }
 
     .header-nav {
-        @include flex-center;
-        gap: 2rem;
-
-        @include mobile {
-            flex-direction: column;
-            gap: 1rem;
-        }
+        display: flex;
+        align-items: center;
+        gap: $spacer-xl;
 
         .nav-links {
-            @include flex-center;
-            gap: 1.5rem;
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: $spacer-md;
 
-            @include mobile {
-                gap: 1rem;
-            }
-        }
-
-        .nav-link {
-            color: rgba(white, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-
-            &:hover {
-                color: white;
-                background-color: rgba(white, 0.1);
+            li {
+                margin: 0;
             }
 
-            &.active {
-                color: white;
-                background-color: rgba(white, 0.15);
+            .nav-link {
+                color: rgba(white, 0.9);
+                text-decoration: none;
+                padding: $spacer-xs $spacer-md;
+                border-radius: $border-radius-sm;
+                font-weight: $font-weight-semibold;
+                transition: all 0.2s ease;
+                display: block;
+
+                &:hover {
+                    background-color: rgba(white, 0.1);
+                    color: white;
+                }
+
+                &.active {
+                    background-color: rgba(white, 0.2);
+                    color: white;
+                }
             }
         }
 
@@ -96,6 +97,31 @@
 }
 
 // Responsive design
+@include respond-below($breakpoint-md) {
+    .app-header {
+        .header-content {
+            flex-direction: column;
+            gap: $spacer-md;
+        }
+
+        .header-nav {
+            width: 100%;
+            flex-direction: column;
+            gap: $spacer-md;
+
+            .nav-links {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+}
+
 @include respond-below($breakpoint-sm) {
     .app-header {
         padding: $spacer-sm 0;
@@ -113,6 +139,19 @@
         }
 
         .header-nav {
+            gap: $spacer-sm;
+
+            .nav-links {
+                flex-direction: column;
+                gap: $spacer-xs;
+                width: 100%;
+
+                .nav-link {
+                    padding: $spacer-sm;
+                    text-align: center;
+                }
+            }
+
             .user-menu {
                 flex-direction: column;
                 gap: $spacer-xs;
@@ -124,6 +163,7 @@
                 .logout-btn {
                     font-size: 0.8rem;
                     padding: $spacer-xs $spacer-sm;
+                    width: 100%;
                 }
             }
         }

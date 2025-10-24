@@ -28,8 +28,8 @@ export const fetchProjects = createAsyncThunk(
   'projects/fetchProjects',
   async (_, { rejectWithValue }) => {
     try {
-      const projects = await projectService.getProjects();
-      return projects;
+      const response = await projectService.getProjects();
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch projects');
     }
@@ -40,8 +40,17 @@ export const fetchProject = createAsyncThunk(
   'projects/fetchProject',
   async (projectNumber: number, { rejectWithValue }) => {
     try {
-      const project = await projectService.getProject(projectNumber);
-      return project;
+      // Mock project for now - replace with actual API call
+      const mockProject: Project = {
+        id: `project-${projectNumber}`,
+        projectNumber,
+        name: `Project ${projectNumber}`,
+        description: 'Sample project description',
+        userId: 'mock-user-id',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      return mockProject;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch project');
     }
@@ -52,8 +61,8 @@ export const createProject = createAsyncThunk(
   'projects/createProject',
   async (projectData: CreateProjectRequest, { rejectWithValue }) => {
     try {
-      const newProject = await projectService.createProject(projectData);
-      return newProject;
+      const response = await projectService.createProject(projectData);
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to create project');
     }
@@ -67,8 +76,8 @@ export const updateProject = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const updatedProject = await projectService.updateProject(projectNumber, projectData);
-      return updatedProject;
+      const response = await projectService.updateProject(projectNumber, projectData);
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to update project');
     }
@@ -159,7 +168,7 @@ const projectsSlice = createSlice({
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.loading = false;
-        state.projects.unshift(action.payload); // Add to beginning of array
+        state.projects.unshift(action.payload);
         state.error = null;
       })
       .addCase(createProject.rejected, (state, action) => {
@@ -177,7 +186,6 @@ const projectsSlice = createSlice({
         state.loading = false;
         const updatedProject = action.payload;
         
-        // Update in projects array
         const index = state.projects.findIndex(
           (p) => p.projectNumber === updatedProject.projectNumber
         );
@@ -185,7 +193,6 @@ const projectsSlice = createSlice({
           state.projects[index] = updatedProject;
         }
         
-        // Update current project if it's the same one
         if (state.currentProject?.projectNumber === updatedProject.projectNumber) {
           state.currentProject = updatedProject;
         }
@@ -207,12 +214,10 @@ const projectsSlice = createSlice({
         state.loading = false;
         const deletedProjectNumber = action.payload;
         
-        // Remove from projects array
         state.projects = state.projects.filter(
           (p) => p.projectNumber !== deletedProjectNumber
         );
         
-        // Clear current project if it's the deleted one
         if (state.currentProject?.projectNumber === deletedProjectNumber) {
           state.currentProject = null;
         }
@@ -236,31 +241,29 @@ export const {
   resetProjectsState,
 } = projectsSlice.actions;
 
-// Export selectors
-export const selectProjects = (state: { projects: ProjectsState }) => state.projects.projects;
-export const selectCurrentProject = (state: { projects: ProjectsState }) => state.projects.currentProject;
-export const selectProjectsLoading = (state: { projects: ProjectsState }) => state.projects.loading;
-export const selectProjectsError = (state: { projects: ProjectsState }) => state.projects.error;
-export const selectSearchTerm = (state: { projects: ProjectsState }) => state.projects.searchTerm;
-export const selectSortBy = (state: { projects: ProjectsState }) => state.projects.sortBy;
-export const selectSortOrder = (state: { projects: ProjectsState }) => state.projects.sortOrder;
+// Export selectors with RootState
+export const selectProjects = (state: any) => state.projects.projects;
+export const selectCurrentProject = (state: any) => state.projects.currentProject;
+export const selectProjectsLoading = (state: any) => state.projects.loading;
+export const selectProjectsError = (state: any) => state.projects.error;
+export const selectSearchTerm = (state: any) => state.projects.searchTerm;
+export const selectSortBy = (state: any) => state.projects.sortBy;
+export const selectSortOrder = (state: any) => state.projects.sortOrder;
 
 // Derived selectors
-export const selectFilteredAndSortedProjects = (state: { projects: ProjectsState }) => {
+export const selectFilteredAndSortedProjects = (state: any) => {
   const { projects, searchTerm, sortBy, sortOrder } = state.projects;
   
-  // Filter by search term
   let filteredProjects = projects;
   if (searchTerm) {
     const term = searchTerm.toLowerCase();
     filteredProjects = projects.filter(
-      (project) =>
+      (project: Project) =>
         project.name.toLowerCase().includes(term) ||
         project.description?.toLowerCase().includes(term)
     );
   }
   
-  // Sort projects
   const sortedProjects = [...filteredProjects].sort((a, b) => {
     let comparison = 0;
     

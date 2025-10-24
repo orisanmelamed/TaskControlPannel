@@ -1,104 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-  fetchProject,
-  deleteProject,
-  clearCurrentProject,
-  selectCurrentProject,
-  selectProjectsLoading,
-  selectProjectsError,
-} from '../store/slices/projectsSlice';
+  fetchTasks,
+  selectTaskStats,
+} from '../store/slices/tasksSlice';
 import Header from '../components/layout/Header';
+import TaskList from '../components/tasks/TaskList';
+import TaskForm from '../components/tasks/TaskForm';
+import { Task } from '../types';
 import { formatDate } from '../utils/dateUtils';
 import './ProjectDetailPage.scss';
 
 const ProjectDetailPage: React.FC = () => {
   const { projectNumber } = useParams<{ projectNumber: string }>();
-  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
   
-  // Redux state
-  const project = useAppSelector(selectCurrentProject);
-  const isLoading = useAppSelector(selectProjectsLoading);
-  const error = useAppSelector(selectProjectsError);
+  // Redux state for tasks
+  const taskStats = useAppSelector(selectTaskStats);
   
   // Local state for UI interactions
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | undefined>();
+
+  // Mock project data for now (replace with actual project fetching later)
+  const project = {
+    id: '1',
+    projectNumber: parseInt(projectNumber || '1'),
+    name: `Project ${projectNumber}`,
+    description: 'This is a sample project for task management.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
   useEffect(() => {
     if (projectNumber) {
-      dispatch(fetchProject(parseInt(projectNumber)));
+      dispatch(fetchTasks(parseInt(projectNumber)));
     }
-    
-    // Clear current project when leaving the component
-    return () => {
-      dispatch(clearCurrentProject());
-    };
   }, [projectNumber, dispatch]);
 
-  const handleDeleteProject = async () => {
-    if (!project) return;
-    
-    try {
-      await dispatch(deleteProject(project.projectNumber)).unwrap();
-      navigate('/projects');
-    } catch (error: any) {
-      // Error is handled by Redux state
-      setShowDeleteConfirm(false);
-      console.error('Failed to delete project:', error);
-    }
+  const handleCreateTask = () => {
+    setEditingTask(undefined);
+    setShowTaskForm(true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="project-detail-page">
-        <Header />
-        <main className="project-detail-main">
-          <div className="container">
-            <div className="loading-state">
-              <div className="spinner"></div>
-              <p>Loading project...</p>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setShowTaskForm(true);
+  };
 
-  if (error) {
-    return (
-      <div className="project-detail-page">
-        <Header />
-        <main className="project-detail-main">
-          <div className="container">
-            <div className="error-state">
-              <h3>Error Loading Project</h3>
-              <p>{error}</p>
-              <div className="error-actions">
-                <button onClick={() => navigate('/projects')} className="btn btn-primary">
-                  Back to Projects
-                </button>
-                <button onClick={() => window.location.reload()} className="btn btn-secondary">
-                  Try Again
-                </button>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const handleCloseTaskForm = () => {
+    setShowTaskForm(false);
+    setEditingTask(undefined);
+  };
 
-  if (!project) {
+  const handleTaskFormSuccess = () => {
+    // The Redux store will automatically update through the action
+  };
+
+  if (!projectNumber) {
     return (
       <div className="project-detail-page">
         <Header />
         <main className="project-detail-main">
           <div className="container">
             <div className="not-found-state">
-              <h3>Project Not Found</h3>
-              <p>The project you're looking for doesn't exist or you don't have access to it.</p>
+              <h3>Invalid Project</h3>
+              <p>No project number provided.</p>
               <Link to="/projects" className="btn btn-primary">
                 Back to Projects
               </Link>
@@ -147,89 +116,61 @@ const ProjectDetailPage: React.FC = () => {
               >
                 Edit Project
               </Link>
-              <button 
-                onClick={() => setShowDeleteConfirm(true)}
-                className="btn btn-danger"
-              >
-                Delete Project
-              </button>
             </div>
           </div>
 
           {/* Project Content */}
           <div className="project-content">
+            {/* Task Statistics */}
             <div className="content-section">
-              <div className="section-header">
-                <h2>Tasks</h2>
-                <Link 
-                  to={`/projects/${project.projectNumber}/tasks/new`}
-                  className="btn btn-primary"
-                >
-                  Add Task
-                </Link>
-              </div>
-              
-              <div className="tasks-preview">
-                <p className="coming-soon">
-                  Task management coming soon! For now, you can manage your project details.
-                </p>
-                <Link 
-                  to={`/projects/${project.projectNumber}/tasks`}
-                  className="btn btn-secondary"
-                >
-                  View All Tasks
-                </Link>
-              </div>
-            </div>
-
-            <div className="content-section">
-              <h2>Project Statistics</h2>
+              <h2>Project Overview</h2>
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-number">0</div>
+                  <div className="stat-number">{taskStats?.total || 0}</div>
                   <div className="stat-label">Total Tasks</div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-number">0</div>
+                  <div className="stat-number">{taskStats?.completed || 0}</div>
                   <div className="stat-label">Completed</div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-number">0</div>
+                  <div className="stat-number">{taskStats?.inProgress || 0}</div>
                   <div className="stat-label">In Progress</div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-number">0</div>
+                  <div className="stat-number">{taskStats?.todo || 0}</div>
                   <div className="stat-label">To Do</div>
                 </div>
               </div>
             </div>
+
+            {/* Tasks Section */}
+            <div className="content-section">
+              <div className="section-header">
+                <h2>Tasks</h2>
+                <button 
+                  onClick={handleCreateTask}
+                  className="btn btn-primary"
+                >
+                  Add Task
+                </button>
+              </div>
+              
+              <TaskList 
+                projectNumber={parseInt(projectNumber)}
+                onEditTask={handleEditTask}
+              />
+            </div>
           </div>
 
-          {/* Delete Confirmation Modal */}
-          {showDeleteConfirm && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h3>Delete Project</h3>
-                <p>
-                  Are you sure you want to delete "{project.name}"? 
-                  This action cannot be undone and will also delete all associated tasks.
-                </p>
-                <div className="modal-actions">
-                  <button 
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="btn btn-secondary"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    onClick={handleDeleteProject}
-                    className="btn btn-danger"
-                  >
-                    Delete Project
-                  </button>
-                </div>
-              </div>
-            </div>
+          {/* Task Form Modal */}
+          {showTaskForm && (
+            <TaskForm
+              projectNumber={parseInt(projectNumber)}
+              task={editingTask}
+              onClose={handleCloseTaskForm}
+              onSuccess={handleTaskFormSuccess}
+            />
           )}
         </div>
       </main>

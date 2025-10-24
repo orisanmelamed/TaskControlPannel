@@ -1,0 +1,306 @@
+.task-form-modal {
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e1e5e9;
+
+        h2 {
+            margin: 0;
+            color: #212529;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: #f8f9fa;
+                color: #212529;
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .form-label {
+        font-weight: 600;
+        color: #212529;
+        font-size: 14px;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        padding: 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        font-family: inherit;
+
+        &:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        &.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        &:disabled {
+            background-color: #f8f9fa;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        &::placeholder {
+            color: #6c757d;
+        }
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+        line-height: 1.5;
+    }
+
+    .form-select {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 8px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        padding-right: 40px;
+        appearance: none;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 4px;
+
+        &.submit-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 0;
+        }
+    }
+
+    .character-count {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: right;
+        margin-top: 4px;
+    }
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #e1e5e9;
+    margin-top: 8px;
+
+    .btn {
+        padding: 12px 24px;
+        border: 1px solid;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        &.btn-secondary {
+            background: white;
+            color: #6c757d;
+            border-color: #dee2e6;
+
+            &:hover:not(:disabled) {
+                background: #f8f9fa;
+                border-color: #6c757d;
+                color: #495057;
+            }
+        }
+
+        &.btn-primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+
+            &:hover:not(:disabled) {
+                background: #0056b3;
+                border-color: #004085;
+            }
+
+            &:disabled {
+                background: #6c757d;
+                border-color: #6c757d;
+            }
+        }
+    }
+}
+
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .task-form-modal {
+        width: 95%;
+        margin: 20px;
+        max-height: calc(100vh - 40px);
+
+        .modal-header {
+            h2 {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+
+        .btn {
+            width: 100%;
+        }
+    }
+}
+
+// Dark mode support (if needed)
+@media (prefers-color-scheme: dark) {
+    .task-form-modal {
+        background: #2d3748;
+        color: #e2e8f0;
+
+        .modal-header {
+            border-bottom-color: #4a5568;
+
+            h2 {
+                color: #e2e8f0;
+            }
+
+            .btn-close {
+                color: #a0aec0;
+
+                &:hover {
+                    background: #4a5568;
+                    color: #e2e8f0;
+                }
+            }
+        }
+    }
+
+    .form-group {
+        .form-label {
+            color: #e2e8f0;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e2e8f0;
+
+            &:focus {
+                border-color: #63b3ed;
+                box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+            }
+
+            &::placeholder {
+                color: #a0aec0;
+            }
+        }
+
+        .character-count {
+            color: #a0aec0;
+        }
+    }
+
+    .form-actions {
+        border-top-color: #4a5568;
+
+        .btn.btn-secondary {
+            background: #4a5568;
+            color: #e2e8f0;
+            border-color: #718096;
+
+            &:hover:not(:disabled) {
+                background: #718096;
+            }
+        }
+    }
+}

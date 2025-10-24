@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import projectsReducer from './slices/projectsSlice';
+import projectsReducer from './slices/projectsSlice.js';
+import tasksReducer from './slices/tasksSlice.js';
 
 export const store = configureStore({
   reducer: {
     projects: projectsReducer,
+    tasks: tasksReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

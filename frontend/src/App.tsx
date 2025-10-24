@@ -1,13 +1,13 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ReduxProvider } from './providers/ReduxProvider';
 import { ReduxProvider } from './providers/ReduxProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import ProjectsPage from './pages/ProjectsPage';
+import CreateProjectPage from './pages/CreateProjectPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
-import ProjectForm from './components/projects/ProjectForm';
 import './App.scss';
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
                 path="/projects/new" 
                 element={
                   <ProtectedRoute>
-                    <ProjectForm mode="create" />
+                    <CreateProjectPage />
                   </ProtectedRoute>
                 } 
               />
@@ -52,14 +52,6 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProjectDetailPage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/projects/:projectNumber/edit" 
-                element={
-                  <ProtectedRoute>
-                    <ProjectForm mode="edit" />
                   </ProtectedRoute>
                 } 
               />

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Header.scss';
 
 const Header: React.FC = () => {
   const { user, logout, isLoading } = useAuth();
+  const location = useLocation();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -15,6 +17,10 @@ const Header: React.FC = () => {
     }
   };
 
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
   return (
     <header className="app-header">
       <div className="container">
@@ -23,27 +29,34 @@ const Header: React.FC = () => {
             <Link to="/dashboard" className="brand-link">
               <h1>Task Control Panel</h1>
             </Link>
+            <Link to="/dashboard" className="brand-link">
+              <h1>Task Control Panel</h1>
+            </Link>
           </div>
           
           <nav className="header-nav">
-            <div className="nav-links">
-              <Link 
-                to="/dashboard" 
-                className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
-              >
-                Dashboard
-              </Link>
-              <Link 
-                to="/projects" 
-                className={`nav-link ${location.pathname.startsWith('/projects') ? 'active' : ''}`}
-              >
-                Projects
-              </Link>
-            </div>
+            <ul className="nav-links">
+              <li>
+                <Link 
+                  to="/dashboard" 
+                  className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/projects" 
+                  className={`nav-link ${isActive('/projects') ? 'active' : ''}`}
+                >
+                  Projects
+                </Link>
+              </li>
+            </ul>
             
             <div className="user-menu">
               <span className="user-info">
-                Welcome, {user?.name || user?.email || 'User'}
+                {user?.name || user?.email || 'User'}
               </span>
               <button
                 onClick={handleLogout}

@@ -30,7 +30,7 @@ export interface Task {
   updatedAt: string;
 }
 
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED';
 
 export interface AuthTokens {
   accessToken: string;
