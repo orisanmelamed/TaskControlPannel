@@ -1,0 +1,76 @@
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+
+.app {
+    min-height: 100vh;
+
+    .app-header {
+        background: linear-gradient(135deg, $primary-color, $primary-dark);
+        color: white;
+        padding: $spacer-xl 0;
+        text-align: center;
+
+        h1 {
+            margin-bottom: $spacer-sm;
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+    }
+
+    .app-main {
+        padding: $spacer-xl 0;
+
+        .card {
+            @include card-shadow(2);
+            margin-bottom: $spacer-lg;
+
+            .card-header {
+                h2 {
+                    margin-bottom: 0;
+                    color: $primary-color;
+                }
+            }
+
+            .actions {
+                margin-top: $spacer-lg;
+
+                .btn+.btn {
+                    margin-left: $spacer-sm;
+                }
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@include respond-below($breakpoint-md) {
+    .app {
+        .app-header {
+            padding: $spacer-lg 0;
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+
+        .app-main {
+            padding: $spacer-lg 0;
+
+            .card .actions {
+                .btn+.btn {
+                    margin-left: 0;
+                    margin-top: $spacer-sm;
+                }
+            }
+        }
+    }
+}

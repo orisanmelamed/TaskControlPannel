@@ -1,0 +1,207 @@
+@use 'variables' as *;
+
+// Reset and base styles
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    line-height: 1.6;
+    color: $dark-color;
+    background-color: $light-color;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Typography
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: $spacer-sm;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+p {
+    margin-bottom: $spacer-md;
+}
+
+a {
+    color: $primary-color;
+    text-decoration: none;
+
+    &:hover {
+        color: $primary-dark;
+        text-decoration: underline;
+    }
+}
+
+// Utility classes
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacer-md;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-1 {
+    margin-bottom: $spacer-xs;
+}
+
+.mb-2 {
+    margin-bottom: $spacer-sm;
+}
+
+.mb-3 {
+    margin-bottom: $spacer-md;
+}
+
+.mb-4 {
+    margin-bottom: $spacer-lg;
+}
+
+.mb-5 {
+    margin-bottom: $spacer-xl;
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.mt-1 {
+    margin-top: $spacer-xs;
+}
+
+.mt-2 {
+    margin-top: $spacer-sm;
+}
+
+.mt-3 {
+    margin-top: $spacer-md;
+}
+
+.mt-4 {
+    margin-top: $spacer-lg;
+}
+
+.mt-5 {
+    margin-top: $spacer-xl;
+}
+
+// Button base styles
+.btn {
+    display: inline-block;
+    padding: $spacer-sm $spacer-md;
+    border: $border-width solid transparent;
+    border-radius: $border-radius;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.btn-primary {
+    color: white;
+    background-color: $primary-color;
+    border-color: $primary-color;
+
+    &:hover:not(:disabled) {
+        background-color: $primary-dark;
+        border-color: $primary-dark;
+    }
+}
+
+.btn-secondary {
+    color: white;
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+
+    &:hover:not(:disabled) {
+        background-color: $secondary-dark;
+        border-color: $secondary-dark;
+    }
+}
+
+// Card component
+.card {
+    background-color: white;
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-sm;
+
+    .card-header {
+        padding: $spacer-md;
+        border-bottom: $border-width solid $border-color;
+        background-color: $light-color;
+    }
+
+    .card-body {
+        padding: $spacer-md;
+    }
+
+    .card-footer {
+        padding: $spacer-md;
+        border-top: $border-width solid $border-color;
+        background-color: $light-color;
+    }
+}
