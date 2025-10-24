@@ -1,41 +1,40 @@
-import React from 'react'
-import './App.scss'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/layout/ProtectedRoute';
+import AuthPage from './pages/AuthPage';
+import DashboardPage from './pages/DashboardPage';
+import './App.scss';
 
 function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <div className="container">
-          <h1>Task Control Panel</h1>
-          <p>Welcome to your task management system</p>
+    <AuthProvider>
+      <Router>
+        <div className="app">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/auth" element={<AuthPage />} />
+            
+            {/* Protected routes */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Default redirect */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            
+            {/* Catch all - redirect to dashboard */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
         </div>
-      </header>
-      
-      <main className="app-main">
-        <div className="container">
-          <div className="card">
-            <div className="card-header">
-              <h2>Getting Started</h2>
-            </div>
-            <div className="card-body">
-              <p>
-                Your React + TypeScript + SCSS project is ready! 
-                Start building your task management features step by step.
-              </p>
-              <div className="actions">
-                <button className="btn btn-primary" onClick={() => alert('Hello from React!')}>
-                  Test Button
-                </button>
-                <button className="btn btn-secondary ml-2" onClick={() => console.log('SCSS styles working!')}>
-                  Check Console
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  )
+      </Router>
+    </AuthProvider>
+  );
 }
 
 export default App

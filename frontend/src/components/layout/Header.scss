@@ -1,0 +1,86 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.app-header {
+    background: linear-gradient(135deg, $primary-color, $primary-dark);
+    color: white;
+    padding: $spacer-md 0;
+    box-shadow: $box-shadow;
+
+    .header-content {
+        @include flex-between;
+        align-items: center;
+    }
+
+    .header-brand {
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    .header-nav {
+        .user-menu {
+            @include flex-center;
+            gap: $spacer-md;
+
+            .user-info {
+                font-size: 0.9rem;
+                opacity: 0.9;
+            }
+
+            .logout-btn {
+                background-color: rgba(white, 0.1);
+                border-color: rgba(white, 0.3);
+                color: white;
+                font-size: 0.9rem;
+                padding: $spacer-xs $spacer-md;
+
+                &:hover:not(:disabled) {
+                    background-color: rgba(white, 0.2);
+                    border-color: rgba(white, 0.4);
+                }
+
+                &:disabled {
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+}
+
+// Responsive design
+@include respond-below($breakpoint-sm) {
+    .app-header {
+        padding: $spacer-sm 0;
+
+        .header-content {
+            flex-direction: column;
+            gap: $spacer-sm;
+            text-align: center;
+        }
+
+        .header-brand {
+            h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        .header-nav {
+            .user-menu {
+                flex-direction: column;
+                gap: $spacer-xs;
+
+                .user-info {
+                    font-size: 0.8rem;
+                }
+
+                .logout-btn {
+                    font-size: 0.8rem;
+                    padding: $spacer-xs $spacer-sm;
+                }
+            }
+        }
+    }
+}

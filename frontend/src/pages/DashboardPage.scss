@@ -1,0 +1,138 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.dashboard-page {
+    min-height: 100vh;
+    background-color: $light-color;
+
+    .dashboard-main {
+        padding: $spacer-xl 0;
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: $spacer-xl;
+
+            h2 {
+                color: $primary-color;
+                font-size: 2.5rem;
+                margin-bottom: $spacer-sm;
+            }
+
+            p {
+                color: $secondary-color;
+                font-size: 1.1rem;
+                margin-bottom: 0;
+            }
+        }
+
+        .dashboard-content {
+            .dashboard-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: $spacer-lg;
+
+                .dashboard-card {
+                    @include card-shadow(2);
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        @include card-shadow(3);
+                    }
+
+                    .card-header {
+                        background: linear-gradient(135deg, $primary-color, $primary-light);
+
+                        h3 {
+                            color: white;
+                            margin: 0;
+                            font-size: 1.25rem;
+                        }
+                    }
+
+                    .card-body {
+                        .metric {
+                            text-align: center;
+                            margin-bottom: $spacer-lg;
+
+                            .metric-number {
+                                display: block;
+                                font-size: 3rem;
+                                font-weight: $font-weight-bold;
+                                color: $primary-color;
+                                line-height: 1;
+                            }
+
+                            .metric-label {
+                                display: block;
+                                font-size: 0.9rem;
+                                color: $secondary-color;
+                                margin-top: $spacer-xs;
+                            }
+                        }
+
+                        .card-text {
+                            color: $secondary-color;
+                            margin-bottom: $spacer-lg;
+                            text-align: center;
+                        }
+
+                        .quick-actions {
+                            display: flex;
+                            flex-direction: column;
+                            gap: $spacer-sm;
+
+                            .btn-block {
+                                width: 100%;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@include respond-below($breakpoint-lg) {
+    .dashboard-page {
+        .dashboard-main {
+            padding: $spacer-lg 0;
+
+            .dashboard-content {
+                .dashboard-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: $spacer-md;
+                }
+            }
+        }
+    }
+}
+
+@include respond-below($breakpoint-sm) {
+    .dashboard-page {
+        .dashboard-main {
+            padding: $spacer-md 0;
+
+            .dashboard-header {
+                margin-bottom: $spacer-lg;
+
+                h2 {
+                    font-size: 2rem;
+                }
+
+                p {
+                    font-size: 1rem;
+                }
+            }
+
+            .dashboard-content {
+                .dashboard-grid {
+                    grid-template-columns: 1fr;
+                    gap: $spacer-md;
+                }
+            }
+        }
+    }
+}
