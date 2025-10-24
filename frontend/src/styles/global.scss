@@ -182,6 +182,42 @@ a {
     }
 }
 
+.btn-danger {
+    color: white;
+    background-color: $danger-color;
+    border-color: $danger-color;
+
+    &:hover:not(:disabled) {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-sm {
+    padding: $spacer-xs $spacer-sm;
+    font-size: 0.875rem;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacer-xs;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
 // Card component
 .card {
     background-color: white;
