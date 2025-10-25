@@ -83,26 +83,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       try {
         if (authService.isAuthenticated()) {
-          // If we have tokens, try to refresh them to validate
-          await authService.refreshToken();
-          // For now, we'll need to get user info from a separate endpoint
-          // or decode it from the token. For simplicity, we'll just mark as authenticated
-          // You might want to add a /auth/me endpoint to get current user info
-          dispatch({ 
-            type: 'SET_USER', 
-            payload: { 
-              id: '', 
-              email: '', 
-              name: '', 
-              createdAt: '', 
-              updatedAt: '' 
-            } 
-          });
+          // If we have tokens, try to get current user info
+          const user = await authService.getCurrentUser();
+          dispatch({ type: 'SET_USER', payload: user });
+        } else {
+          // No tokens, mark as not loading
+          dispatch({ type: 'SET_LOADING', payload: false });
         }
       } catch (error) {
-        // If token refresh fails, clear auth state
+        // If getting user info fails, clear auth state
         authService.clearAuth();
-      } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     };

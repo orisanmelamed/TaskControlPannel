@@ -17,6 +17,7 @@ const apiClient: AxiosInstance = axios.create({
 class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'task_control_access_token';
   private static readonly REFRESH_TOKEN_KEY = 'task_control_refresh_token';
+  private static readonly USER_KEY = 'task_control_user';
 
   static getAccessToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
@@ -34,10 +35,20 @@ class TokenManager {
   static clearTokens(): void {
     localStorage.removeItem(this.ACCESS_TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
   }
 
   static isAuthenticated(): boolean {
     return !!this.getAccessToken();
+  }
+
+  static setUser(user: any): void {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  }
+
+  static getUser(): any | null {
+    const userData = localStorage.getItem(this.USER_KEY);
+    return userData ? JSON.parse(userData) : null;
   }
 }
 
