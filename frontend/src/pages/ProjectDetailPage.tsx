@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   fetchTasks,
-  selectTaskStats,
+  selectTaskStatsByProject,
 } from '../store/slices/tasksSlice';
 import Header from '../components/layout/Header';
 import TaskList from '../components/tasks/TaskList';
@@ -17,8 +17,10 @@ const ProjectDetailPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   
-  // Redux state for tasks
-  const taskStats = useAppSelector(selectTaskStats);
+  // Redux state for tasks - use project-specific selector
+  const taskStats = useAppSelector(state => 
+    projectNumber ? selectTaskStatsByProject(parseInt(projectNumber))(state) : { total: 0, completed: 0, inProgress: 0, todo: 0 }
+  );
   
   // Local state for UI interactions
   const [showTaskForm, setShowTaskForm] = useState(false);
