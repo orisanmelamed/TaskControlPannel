@@ -2,12 +2,15 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { Project } from '../types';
 import { 
   fetchProjects, 
   selectProjects,
   selectProjectsLoading 
 } from '../store/slices/projectsSlice';
 import { 
+  fetchTasks,
+  clearTasks,
   selectTasks,
   selectTasksLoading,
   selectTaskStats
@@ -32,6 +35,19 @@ const DashboardPage: React.FC = () => {
     dispatch(fetchProjects());
   }, [dispatch]);
 
+  // Load tasks for all projects after projects are loaded
+  useEffect(() => {
+    if (projects.length > 0) {
+      // Clear existing tasks first to avoid duplicates
+      dispatch(clearTasks());
+      
+      // Fetch tasks for each project
+      projects.forEach((project: Project) => {
+        dispatch(fetchTasks(project.projectNumber));
+      });
+    }
+  }, [projects, dispatch]);
+
   const handleCreateProject = () => {
     navigate('/projects/new');
   };
@@ -41,13 +57,9 @@ const DashboardPage: React.FC = () => {
   };
 
   const handleViewTasks = () => {
-    // If there are projects and tasks, navigate to the first project's detail page
-    // Otherwise, navigate to projects page to create a project first
-    if (projects.length > 0 && tasks.length > 0) {
-      navigate(`/projects/${projects[0].projectNumber}`);
-    } else {
-      navigate('/projects');
-    }
+    // Navigate to the all tasks page
+    console.log('Navigating to /tasks');
+    navigate('/tasks');
   };
 
   return (
@@ -82,7 +94,7 @@ const DashboardPage: React.FC = () => {
                   </p>
                   <button className="btn btn-primary" onClick={handleCreateProject}>
                     Create Project
-                  </Link>
+                  </button>
                 </div>
               </div>
 

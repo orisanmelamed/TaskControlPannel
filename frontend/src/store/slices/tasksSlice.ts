@@ -31,7 +31,9 @@ export const fetchTasks = createAsyncThunk(
   async (projectNumber: number, { rejectWithValue }) => {
     try {
       const tasks = await taskService.getTasks(projectNumber);
-      return { tasks, projectNumber };
+      // Get the projectId from the fetched tasks or from the state
+      const projectId = tasks.length > 0 ? tasks[0].projectId : null;
+      return { tasks, projectNumber, projectId };
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch tasks');
     }
@@ -165,7 +167,16 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = action.payload.tasks;
+        const { tasks: newTasks, projectId } = action.payload;
+        
+        // If we have a projectId, remove existing tasks from this project
+        if (projectId) {
+          state.tasks = state.tasks.filter(task => task.projectId !== projectId);
+        }
+        
+        // Add the new tasks (merge them with existing tasks from other projects)
+        state.tasks = [...state.tasks, ...newTasks];
+        
         state.currentProjectNumber = action.payload.projectNumber;
         state.error = null;
       })
@@ -389,6 +400,111 @@ export const selectTaskStats = (state: { tasks: TasksState }) => {
 
 export const selectTaskByNumber = (taskNumber: number) => (state: { tasks: TasksState }) =>
   state.tasks.tasks.find((task) => task.taskNumber === taskNumber);
+
+// Selector to get tasks for a specific project
+export const selectTasksByProject = (projectNumber: number) => (state: { tasks: TasksState; projects: any }) => {
+  const tasks = state.tasks.tasks;
+  const projects = state.projects?.projects || [];
+  
+  // Find the project by projectNumber to get its ID
+  const project = projects.find((p: any) => p.projectNumber === projectNumber);
+  
+  if (!project) {
+    return [];
+  }
+  
+  // Filter tasks by projectId
+  return tasks.filter(task => task.projectId === project.id);
+};
+
+// Selector to get filtered and sorted tasks for a specific project
+export const selectFilteredAndSortedTasksByProject = (projectNumber: number) => (state: { tasks: TasksState; projects: any }) => {
+  const { filterStatus, sortBy, sortOrder } = state.tasks;
+  const tasks = state.tasks.tasks;
+  const projects = state.projects?.projects || [];
+  
+  // Find the project by projectNumber to get its ID
+  const project = projects.find((p: any) => p.projectNumber === projectNumber);
+  
+  if (!project) {
+    return [];
+  }
+  
+  // Filter tasks by projectId first
+  let filteredTasks = tasks.filter(task => task.projectId === project.id);
+  
+  // Then filter by status
+  if (filterStatus !== 'ALL') {
+    filteredTasks = filteredTasks.filter(task => task.status === filterStatus);
+  }
+  
+  // Sort tasks
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'position':
+        comparison = a.position - b.position;
+        break;
+      case 'dueDate':
+        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
+        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
+        comparison = aDate - bDate;
+        break;
+      case 'status':
+        const statusOrder = { TODO: 0, IN_PROGRESS: 1, BLOCKED: 2, DONE: 3 };
+        comparison = statusOrder[a.status] - statusOrder[b.status];
+        break;
+      case 'createdAt':
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    return sortOrder === 'asc' ? comparison : -comparison;
+  });
+  
+  return sortedTasks;
+};
+
+// Selector to get task stats for a specific project
+export const selectTaskStatsByProject = (projectNumber: number) => (state: { tasks: TasksState; projects: any }) => {
+  const tasks = state.tasks.tasks;
+  const projects = state.projects?.projects || [];
+  
+  // Find the project by projectNumber to get its ID
+  const project = projects.find((p: any) => p.projectNumber === projectNumber);
+  
+  if (!project) {
+    return {
+      total: 0,
+      completed: 0,
+      inProgress: 0,
+      blocked: 0,
+      todo: 0,
+      completionRate: 0,
+    };
+  }
+  
+  // Filter tasks by projectId
+  const projectTasks = tasks.filter(task => task.projectId === project.id);
+  
+  const total = projectTasks.length;
+  const completed = projectTasks.filter(task => task.status === 'DONE').length;
+  const inProgress = projectTasks.filter(task => task.status === 'IN_PROGRESS').length;
+  const blocked = projectTasks.filter(task => task.status === 'BLOCKED').length;
+  const todo = projectTasks.filter(task => task.status === 'TODO').length;
+  
+  return {
+    total,
+    completed,
+    inProgress,
+    blocked,
+    todo,
+    completionRate: total > 0 ? Math.round((completed / total) * 100) : 0,
+  };
+};
 
 // Export the reducer
 export default tasksSlice.reducer;

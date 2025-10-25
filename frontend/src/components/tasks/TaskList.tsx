@@ -3,11 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchTasks,
   setFilterStatus,
-  selectFilteredAndSortedTasks,
+  selectFilteredAndSortedTasksByProject,
   selectTasksLoading,
   selectTasksError,
   selectFilterStatus,
-  selectTaskStats,
+  selectTaskStatsByProject,
 } from '../../store/slices/tasksSlice';
 import { Task, TaskStatus } from '../../types';
 import TaskItem from './TaskItem.js';
@@ -28,12 +28,12 @@ const TaskList: React.FC<TaskListProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   
-  // Redux state
-  const tasks = useAppSelector(selectFilteredAndSortedTasks);
+  // Redux state - use project-specific selectors
+  const tasks = useAppSelector(state => selectFilteredAndSortedTasksByProject(projectNumber)(state));
   const isLoading = useAppSelector(selectTasksLoading);
   const error = useAppSelector(selectTasksError);
   const filterStatus = useAppSelector(selectFilterStatus);
-  const taskStats = useAppSelector(selectTaskStats);
+  const taskStats = useAppSelector(state => selectTaskStatsByProject(projectNumber)(state));
 
   // Load tasks when component mounts or project changes
   useEffect(() => {

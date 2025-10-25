@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Header.scss';
 
 const Header: React.FC = () => {
   const { user, logout, isLoading } = useAuth();
-  const location = useLocation();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -29,9 +27,6 @@ const Header: React.FC = () => {
             <Link to="/dashboard" className="brand-link">
               <h1>Task Control Panel</h1>
             </Link>
-            <Link to="/dashboard" className="brand-link">
-              <h1>Task Control Panel</h1>
-            </Link>
           </div>
           
           <nav className="header-nav">
@@ -50,6 +45,14 @@ const Header: React.FC = () => {
                   className={`nav-link ${isActive('/projects') ? 'active' : ''}`}
                 >
                   Projects
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/tasks" 
+                  className={`nav-link ${isActive('/tasks') ? 'active' : ''}`}
+                >
+                  Tasks
                 </Link>
               </li>
             </ul>
