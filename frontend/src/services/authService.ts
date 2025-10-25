@@ -27,8 +27,9 @@ class AuthService {
       const response = await apiClient.post<AuthResponse>('/auth/register', data);
       const { user, accessToken, refreshToken } = response.data;
       
-      // Store tokens
+      // Store tokens and user info
       TokenManager.setTokens(accessToken, refreshToken);
+      TokenManager.setUser(user);
       
       return response.data;
     } catch (error: any) {
@@ -45,8 +46,9 @@ class AuthService {
       const response = await apiClient.post<AuthResponse>('/auth/login', data);
       const { user, accessToken, refreshToken } = response.data;
       
-      // Store tokens
+      // Store tokens and user info
       TokenManager.setTokens(accessToken, refreshToken);
+      TokenManager.setUser(user);
       
       return response.data;
     } catch (error: any) {
@@ -125,6 +127,21 @@ class AuthService {
    */
   clearAuth(): void {
     TokenManager.clearTokens();
+  }
+
+  /**
+   * Get current user information from the server
+   */
+  async getCurrentUser(): Promise<User> {
+    try {
+      const response = await apiClient.get<User>('/users/me');
+      // Store user info in localStorage for persistence
+      TokenManager.setUser(response.data);
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to get user info';
+      throw new Error(Array.isArray(message) ? message[0] : message);
+    }
   }
 }
 
