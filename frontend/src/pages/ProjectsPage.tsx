@@ -75,7 +75,7 @@ const ProjectsPage: React.FC = () => {
           <div className="container">
             <div className="loading-state">
               <div className="spinner"></div>
-              <p>Loading projects...</p>
+              <p>Loading projects...........</p>
             </div>
           </div>
         </main>
